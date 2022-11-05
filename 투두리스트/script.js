@@ -8,6 +8,11 @@
   }
   const API_URL = `http://localhost:3000/todos`
   const $todos = get(".todos")
+  const $form = get(".todo_form")
+  const $inputTodo = get('.todo_input')
+  
+
+
 
   const createTodoElement = (item) => {
     const { id, content } = item
@@ -58,10 +63,35 @@
     .catch((error)=>console.log(error))
   }
 
+  const addTodo = (e) => {
+    e.preventDefault()
+
+    let content = $inputTodo.value
+    if(!content) return;
+    let data = {
+      content : content,
+      completed : false
+    }
+    fetch(API_URL,{
+      method : 'POST',
+      headers: { 'Content-type': 'application/json' },
+      body : JSON.stringify(data)
+    })
+    .then(getTodos())
+    .then(()=>{
+      $inputTodo.value = ''
+      $inputTodo.focus()
+    })
+    .catch(e => console.log(e))
+  }
+
   const init = () => {
     window.addEventListener('DOMContentLoaded',()=>{
       getTodos()
     })
+
+    $form.addEventListener("submit",addTodo)
+
   }
 
   init()
