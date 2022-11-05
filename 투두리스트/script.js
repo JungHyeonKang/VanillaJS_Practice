@@ -1,9 +1,13 @@
 ;(function () {
   'use strict'
-
   const get = (target) => {
     return document.querySelector(target)
   }
+  const getAll = (target) => {
+    return document.querySelectorAll(target);
+  }
+  const API_URL = `http://localhost:3000/todos`
+  const $todos = get(".todos")
 
   const createTodoElement = (item) => {
     const { id, content } = item
@@ -38,7 +42,27 @@
       `
     return $todoItem
   }
+  const renderAllTodos = (todo) => {
+    $todos.innerHTML = ""
+    todo.forEach(item => {
+      const todoElement = createTodoElement(item)
+      $todos.appendChild(todoElement)
+    });
+    
+  }
 
-  const init = () => {}
+  const getTodos = ()=>{
+    fetch(API_URL)
+    .then((response)=>response.json())
+    .then((todo)=>renderAllTodos(todo))
+    .catch((error)=>console.log(error))
+  }
+
+  const init = () => {
+    window.addEventListener('DOMContentLoaded',()=>{
+      getTodos()
+    })
+  }
+
   init()
 })()
