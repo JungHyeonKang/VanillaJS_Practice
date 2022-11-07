@@ -85,13 +85,53 @@
     .catch(e => console.log(e))
   }
 
+  const changeEditMode = (e) =>{
+    const $item = e.target.closest('.item')
+    const $editInput =  $item.querySelector('input[type="text"]')
+    const $contentbuttons =  $item.querySelector('.content_buttons')
+    const $editbuttons =  $item.querySelector('.edit_buttons')
+    const $label = $item.querySelector('label')
+    const value = $label.innerText;
+    if(e.target.className === 'todo_edit_button'){
+      $label.style.display = 'none'
+      $editInput.style.display = 'block'
+      $contentbuttons.style.display = 'none'
+      $editbuttons.style.display = 'block'
+      $editInput.focus()
+      $editInput.value = '';
+      $editInput.value = value
+    }
+
+    if(e.target.className ==='todo_edit_cancel_button'){
+      $label.style.display = 'block'
+      $editInput.style.display = 'none'
+      $contentbuttons.style.display = 'block'
+      $editbuttons.style.display = 'none'
+      $editInput.value =$label.innerText
+    }
+  }
+  const editTodo = (e) => {
+    if(e.target.className !=='todo_edit_confirm_button') return;
+    const $item = e.target.closest('.item')
+    const id = $item.dataset.id
+    const $editInput = $item.querySelector('input[type="text"]')
+    const content = $editInput.value
+    fetch(`${API_URL}/${id}`,{
+      method: 'PATCH',
+      headers: { 'Content-type': 'application/json' },
+      body: JSON.stringify({ content }),
+    })
+    .then(getTodos)
+    .error((error)=>console.log(error))
+  }
   const init = () => {
     window.addEventListener('DOMContentLoaded',()=>{
       getTodos()
     })
 
     $form.addEventListener("submit",addTodo)
-
+    $todos.addEventListener("click",changeEditMode)
+    $todos.addEventListener("click",editTodo)
   }
 
   init()
