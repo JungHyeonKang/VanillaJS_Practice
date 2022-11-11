@@ -42,15 +42,30 @@
   
   const playGame = (e) =>{
     e.preventDefault();
+    if(!!end){
+      return ;
+    }
+    
     const inputNumber = $input.value;
+    const {password} = baseball
     if(inputNumber.length !=digit){
       alert(`${digit}자리 숫자를 입력해주세요`)
     }
     else if(isDuplicated(inputNumber)){
       alert("중복된 숫자는 입력할 수 없습니다.")
     }
-    else{
-     
+    else{     
+      trial++
+      if(trial >=limit && !isCorrect(inputNumber , password)){
+        alert("쓰리아웃")
+        end = true;
+        inputNumber.value = '';
+        inputNumber.focus();
+        $answer.innerHTML = password;
+      }
+
+      const result = onPlayed(inputNumber , getResult(inputNumber,password))
+      return $question.innerHTML += `<span>${result}</span>`
     }
   }
   
@@ -58,5 +73,21 @@
     return [...new Set(number.split(""))].length !== digit; // 입력된 숫자를 배열로 바꾸고 set으로 변형하여 중복체크
   }
 
+  const onPlayed = (number , hint) => {
+    return `${trial}차 시도 : ${number} , ${hint}`
+  }
+
+  const isCorrect = (number , password) =>{
+    return number === password;
+  }
+
+  const getResult = (number , password) => {
+    if(isCorrect(number,password)){
+      $answer.innerHTML = password;
+      end = true;
+      return `홈런!`
+    }
+    const getStrike = getStrikes();
+  }
   init()
 })()
