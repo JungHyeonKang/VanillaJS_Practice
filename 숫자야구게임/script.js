@@ -17,8 +17,8 @@
 
   const init = () =>{
    
-    get('form').addEventListener('submit',()=>{
-     // playGame()
+    get('form').addEventListener('submit',(e)=>{
+      playGame(e)
     }
     )
    setPassword()
@@ -33,15 +33,30 @@
         continue;
       }
       password += random
-      console.log(password)
       passwordArray[random] = true; // 중복 표사를 위한 true 체크
     }
 
      baseball.password = password;
+     console.log(password)
+  }
+  
+  const playGame = (e) =>{
+    e.preventDefault();
+    const inputNumber = $input.value;
+    if(inputNumber.length !=digit){
+      alert(`${digit}자리 숫자를 입력해주세요`)
+    }
+    else if(isDuplicated(inputNumber)){
+      alert("중복된 숫자는 입력할 수 없습니다.")
+    }
+    else{
+     
+    }
+  }
+  
+  const isDuplicated = (number) =>{
+    return [...new Set(number.split(""))].length !== digit; // 입력된 숫자를 배열로 바꾸고 set으로 변형하여 중복체크
   }
 
-  const playGame = () => {
-
-  }
   init()
 })()
