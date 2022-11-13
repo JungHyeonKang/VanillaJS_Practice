@@ -8,7 +8,7 @@
   const getAll = function (target) {
     return document.querySelectorAll(target)
   }
-
+  const keys = Array.from(getAll('.key'))
   const soundsRoot = 'assets/sounds/'
   const drumSounds = [
     { key: 81, sound: 'clap.wav' },
@@ -21,4 +21,44 @@
     { key: 88, sound: 'snare.wav' },
     { key: 67, sound: 'tom.wav' },
   ]
+  const getAudioElement = (index) =>{
+    const audio = document.createElement('audio');
+    audio.dataset.key = drumSounds[index].key
+    audio.src = soundsRoot + drumSounds[index].sound
+    return audio
+  }
+  const onMouseDown = (e) =>{
+    const keyCode =e.target.getAttribute('data-key')
+    playSound(keyCode)
+  }
+  const onKeydown = (e) =>{
+    const keyCode =  e.keyCode
+    playSound(keyCode)
+  }
+  const playSound = (keyCode)=>{
+    const $audio = get(`audio[data-key="${keyCode}"]`)
+    const $key = get(`div[data-key="${keyCode}"]`)
+    if($audio && $key){
+      $key.classList.add('playing')
+      $audio.currentTime = 0
+      $audio.play()
+    }
+  }
+  const onTransitionEnd = (e) => {
+    if (e.propertyName === 'transform') {    
+      e.target.classList.remove('playing')
+    }
+  }
+  const init = () => {
+    window.addEventListener('keydown',onKeydown)
+    keys.forEach((key,index)=>{
+      const audio = getAudioElement(index)
+      key.appendChild(audio)
+      key.dataset.key = drumSounds[index].key
+      key.addEventListener('mousedown' , onMouseDown)
+      key.addEventListener('transitionend' , onTransitionEnd)
+    })
+  }
+
+  init()
 })()
