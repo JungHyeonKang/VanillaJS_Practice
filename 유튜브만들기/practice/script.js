@@ -94,11 +94,88 @@
     $player.addEventListener('play',buttonChange($btnPlay , 'pause'))
     $player.addEventListener('pause',buttonChange($btnPlay , 'play'))
     $player.addEventListener('timeupdate',setProgress)
+    $player.muted ? buttonChange($btnMute , 'unmute') : buttonChange($btnMute , 'mute')
+    $player.addEventListener('ended' , $player.pause())
+    //프로그래스바
+    $progress.addEventListener('click', getCurrent)
+    // 그외 버튼
+    $btnPlay.addEventListener('click', playVideo)
+    $btnReplay.addEventListener('click' , replayVideo)
+    $btnStop.addEventListener('click' , stopVideo)
+    $btnMute.addEventListener('click', muteVideo)
+    $fullScreen.addEventListener('click', fullScreen)
   }
   // 프로그레스 바 설정
   const setProgress = () =>{
     let percentage = Math.floor((100 / $player.duration) * $player.currentTime)
     $progress.value = percentage
+  }
+
+  const getCurrent = (e) => {
+    let percent = e.offsetX / $progress.offsetWidth
+    $player.currentTime = percent * $player.duration
+    e.target.value = Math.floor(percent / 100)
+  }
+
+  const playVideo = () => {
+    if($player.ended || $player.paused){
+      buttonChange($btnPlay , 'pause')
+      $player.play()
+    }else{
+      buttonChange($btnPlay , 'play')
+      $player.pause()
+    }
+  }
+
+  const replayVideo = () =>{
+    $player.currentTime = 0;
+    $player.play()
+    buttonChange($btnPlay , 'pause')
+  }
+
+  const stopVideo = () =>{
+    $player.pause()
+    $player.currentTime = 0
+    buttonChange($btnPlay , 'play')
+  }
+  
+  const muteVideo = (e) =>{
+    if($player.muted){
+      buttonChange($btnMute , 'mute')
+      $player.muted = false;
+    }else {
+      buttonChange($btnMute, 'unmute')
+      $player.muted = true
+    }
+  }
+    const fullScreen = () => {
+      if ($player.requestFullscreen)
+        if (document.fullScreenElement) {
+          document.cancelFullScreen()
+        } else {
+          $player.requestFullscreen()
+        }
+      else if ($player.msRequestFullscreen)
+        if (document.msFullscreenElement) {
+          document.msExitFullscreen()
+        } else {
+          $player.msRequestFullscreen()
+        }
+      else if ($player.mozRequestFullScreen)
+        if (document.mozFullScreenElement) {
+          document.mozCancelFullScreen()
+        } else {
+          $player.mozRequestFullScreen()
+        }
+      else if ($player.webkitRequestFullscreen)
+        if (document.webkitFullscreenElement) {
+          document.webkitCancelFullScreen()
+        } else {
+          $player.webkitRequestFullscreen()
+        }
+      else {
+        alert('Not Supported')
+    }
   }
   init()
 })()
