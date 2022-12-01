@@ -8,6 +8,16 @@
   const $list = getAll('.contents.list figure')
   const $searchButton = get('.btn_search')
 
+  // 상세보기
+  const $player = get('.view video')
+  const $btnPlay = get('.js-play')
+  const $btnReplay = get('.js-replay')
+  const $btnStop = get('.js-stop')
+  const $btnMute = get('.js-mute')
+  const $progress = get('.js-progress')
+  const $volume = get('.js-volume')
+  const $fullScreen = get('.js-fullScreen')
+
   const init = () => {
     $search.addEventListener('keyup', search)
     $searchButton.addEventListener('click', search)
@@ -18,7 +28,6 @@
       $list[index].addEventListener('click',hashChange)
     }
     window.addEventListener('hashchange',()=>{
-      console.log("hashchage 후 입장")
       
       const isView = window.location.hash.indexOf('view')
       if(isView){
@@ -27,6 +36,7 @@
         getListPage()
       }
     })
+    viewPageSetting()
   }
   const search = () =>{
     const searchText = $search.value.toLowerCase()
@@ -52,7 +62,6 @@
   }
 
   const hashChange = (e) => {
-    console.log("hashChange 입장")
     e.preventDefault()
     const $target = e.target.closest('figure')
     const titleText = $target.querySelector('strong').textContent
@@ -61,20 +70,35 @@
   }
 
   const getViewPage = () =>{
-    console.log("getViewPage 입장")
     const viewTitle = get('.view strong')
     const text =decodeURI(window.location.hash.split('&')[1])
     viewTitle.innerText = text
     
-
     get('.list').style.display = 'none'
     get('.view').style.display = 'flex'
   }
 
   const getListPage = () =>{
-    console.log("getListPage 입장")
     get('.list').style.display = 'flex'
     get('.view').style.display = 'none'
+  }
+  const buttonChange = (btn , btnText) =>{
+    btn.innerHTML = btnText
+  }
+  const viewPageSetting = () =>{
+    //볼륨
+    $volume.addEventListener('change',(e)=>{
+      $player.volume = e.target.value
+    })
+    //비디오 플레이어
+    $player.addEventListener('play',buttonChange($btnPlay , 'pause'))
+    $player.addEventListener('pause',buttonChange($btnPlay , 'play'))
+    $player.addEventListener('timeupdate',setProgress)
+  }
+  // 프로그레스 바 설정
+  const setProgress = () =>{
+    let percentage = Math.floor((100 / $player.duration) * $player.currentTime)
+    $progress.value = percentage
   }
   init()
 })()
