@@ -15,7 +15,18 @@
       const $target = $list[index].querySelector('picture');
       $target.addEventListener('mouseover', onMouseover)
       $target.addEventListener('mouseout', onMouseout)
+      $list[index].addEventListener('click',hashChange)
     }
+    window.addEventListener('hashchange',()=>{
+      console.log("hashchage 후 입장")
+      
+      const isView = window.location.hash.indexOf('view')
+      if(isView){
+        getViewPage()
+      }else{
+        getListPage()
+      }
+    })
   }
   const search = () =>{
     const searchText = $search.value.toLowerCase()
@@ -39,6 +50,31 @@
     const $webp = e.target.parentNode.querySelector('source')
     $webp.setAttribute('srcset' , './assets/sample.jpg')
   }
-  
+
+  const hashChange = (e) => {
+    console.log("hashChange 입장")
+    e.preventDefault()
+    const $target = e.target.closest('figure')
+    const titleText = $target.querySelector('strong').textContent
+    window.location.hash = `view&${titleText}`
+    getViewPage()
+  }
+
+  const getViewPage = () =>{
+    console.log("getViewPage 입장")
+    const viewTitle = get('.view strong')
+    const text =decodeURI(window.location.hash.split('&')[1])
+    viewTitle.innerText = text
+    
+
+    get('.list').style.display = 'none'
+    get('.view').style.display = 'flex'
+  }
+
+  const getListPage = () =>{
+    console.log("getListPage 입장")
+    get('.list').style.display = 'flex'
+    get('.view').style.display = 'none'
+  }
   init()
 })()
