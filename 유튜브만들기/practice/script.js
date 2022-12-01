@@ -11,7 +11,11 @@
   const init = () => {
     $search.addEventListener('keyup', search)
     $searchButton.addEventListener('click', search)
-    
+    for (let index = 0; index < $list.length; index++) {
+      const $target = $list[index].querySelector('picture');
+      $target.addEventListener('mouseover', onMouseover)
+      $target.addEventListener('mouseout', onMouseout)
+    }
   }
   const search = () =>{
     const searchText = $search.value.toLowerCase()
@@ -25,5 +29,16 @@
       }
     }
   }
+
+  const onMouseover = (e) => {
+    const $webp = e.target.parentNode.querySelector('source')
+    $webp.setAttribute('srcset','./assets/sample.webp')
+  }
+
+  const onMouseout = (e) =>{
+    const $webp = e.target.parentNode.querySelector('source')
+    $webp.setAttribute('srcset' , './assets/sample.jpg')
+  }
+  
   init()
 })()
