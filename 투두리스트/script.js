@@ -73,7 +73,7 @@
                 class='todo_checkbox' 
                 ${isChecked}
               />
-              <label>${content}</label>
+              <label class="title">${content}</label>
               <input type="text" value="${content}" />
             </div>
             <div class="item_buttons content_buttons">
@@ -158,7 +158,7 @@
     const $editButtons = $item.querySelector('.edit_buttons')
     const value = $editInput.value
 
-    if (e.target.className === 'todo_edit_button') {
+    if (e.target.className === 'todo_edit_button' || e.target.className === 'title') {
       $label.style.display = 'none'
       $editInput.style.display = 'block'
       $contentButtons.style.display = 'none'
