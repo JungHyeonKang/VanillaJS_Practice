@@ -42,6 +42,16 @@
       }
       return number
     }
+    stop(){
+      clearInterval(this.interval)
+    }
+    reset(){
+      clearInterval(this.interval)
+      this.defaultTime = '00:00.00'
+      this.startTime = 0
+      this.elapsedTime = 0
+      this.print(this.defaultTime)   
+    }
   }
 
   const $timer = get('.timer')
@@ -54,5 +64,10 @@
   $startButton.addEventListener('click', () => {
     stopwatch.start()
   })
-
+  $stopButton.addEventListener('click', () => {
+    stopwatch.stop()
+  })
+  $resetButton.addEventListener('click', () => {
+    stopwatch.reset()
+  })
 })()
