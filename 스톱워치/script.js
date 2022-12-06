@@ -28,10 +28,19 @@
       const minutes = date.getUTCMinutes()
       const seconds = date.getUTCSeconds()
       const milliSeconds = date.getUTCMilliseconds()
-      return `${minutes}:${seconds}.${milliSeconds}`
+      return `${this.addZero(minutes)}:${this.addZero(seconds)}.${this.addZero(milliSeconds)}`
     }
     print(text){
       this.timer.innerHTML = text;
+    }
+    addZero(number){
+      if(number < 10){
+        return '0' + number 
+      }
+      if(number >=100){
+        return number.toString().slice(0,-1)
+      }
+      return number
     }
   }
 
