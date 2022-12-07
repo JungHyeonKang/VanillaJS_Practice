@@ -30,20 +30,59 @@
     }
 
     setOperation(operation){
+      this.resetOperation()
       this.operation = operation
       this.prevValue = this.currentValue
-      this.currentValue = ''
+      this.currentValue = ''    
       const elements = Array.from(getAll('.cell_button.operation')) 
       const element =elements.filter((element) =>
         element.innerText.includes(this.operation)
       )[0]
       element.classList.add('active')
     }
+
+    compute(){
+      console.log(this.operation)
+      let computation
+      let current = parseFloat(this.currentValue) 
+      let prev = parseFloat(this.prevValue) 
+      if(isNaN(current) || isNaN(prev)) return
+
+      switch(this.operation){
+        case '+' :
+          computation = prev + current
+          break
+        case '-' :
+          computation = prev + current
+          break
+        case '*' :
+          computation = prev + current
+          break
+        case '÷' :
+          computation = prev + current
+          break
+        default :
+          return
+      }
+      console.log(this.currentValue)
+      this.currentValue = computation.toString()
+      this.prevValue = ''
+      this.resetOperation()
+    }
+
+    resetOperation(){
+      this.operation = null
+      const elements = Array.from(getAll('.cell_button.operation'))
+      elements.forEach(ele=>{
+        ele.classList.remove('active')
+      })
+    }
   }
 
   const display = get('.display')
   const numberButtons = getAll('.cell_button.number')
   const operationButtons = getAll('.cell_button.operation')
+  const computeButton = get('.cell_button.compute')
   const calculator = new Calculator(display)
   
   numberButtons.forEach(button=>{
@@ -58,5 +97,10 @@
       calculator.setOperation(button.innerText)
       calculator.updateDisplay()
     })
+  })
+
+  computeButton.addEventListener('click',()=>{
+    calculator.compute()
+    calculator.updateDisplay()
   })
 })()
