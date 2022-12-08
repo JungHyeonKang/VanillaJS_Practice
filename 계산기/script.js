@@ -25,8 +25,12 @@
     updateDisplay(){  
       if(this.currentValue){ // 연산자 키 누르면 숫자 안지워지기 위해 설정
         this.element.value = this.currentValue
+        return
+      }else if(this.prevValue){ // 연산자 키 눌러도 현재 입력값 표시하기 위해 설정
+        this.element.value = this.prevValue
+        return
       }
-      
+      this.element.value = 0 // 연산자를 연속으로 누르면 0 으로 초기화
     }
 
     setOperation(operation){
@@ -34,6 +38,7 @@
       this.operation = operation
       this.prevValue = this.currentValue
       this.currentValue = ''    
+      console.log(this.prevValue)
       const elements = Array.from(getAll('.cell_button.operation')) 
       const element =elements.filter((element) =>
         element.innerText.includes(this.operation)
@@ -42,7 +47,6 @@
     }
 
     compute(){
-      console.log(this.operation)
       let computation
       let current = parseFloat(this.currentValue) 
       let prev = parseFloat(this.prevValue) 
@@ -77,12 +81,29 @@
         ele.classList.remove('active')
       })
     }
+
+    clear(){ //뒤로가기 기능
+      if(this.currentValue){ // 숫자 입력했을때
+        this.currentValue = ''
+        return
+      }
+      if(this.operation){ // 연산자 입력했을 때
+        this.resetOperation()
+        this.currentValue = this.prevValue
+        return
+      }
+      if(this.prevValue){ 
+        this.prevValue = ''
+        return
+      }
+    }
   }
 
   const display = get('.display')
   const numberButtons = getAll('.cell_button.number')
   const operationButtons = getAll('.cell_button.operation')
   const computeButton = get('.cell_button.compute')
+  const clearButton = get('.cell_button.clear')
   const calculator = new Calculator(display)
   
   numberButtons.forEach(button=>{
@@ -101,6 +122,11 @@
 
   computeButton.addEventListener('click',()=>{
     calculator.compute()
+    calculator.updateDisplay()
+  })
+
+  clearButton.addEventListener('click',()=>{
+    calculator.clear()
     calculator.updateDisplay()
   })
 })()
