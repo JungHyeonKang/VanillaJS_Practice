@@ -30,7 +30,7 @@
         this.element.value = this.prevValue
         return
       }
-      this.element.value = 0 // 연산자를 연속으로 누르면 0 으로 초기화
+      this.element.value = 0 // 연산자를 연속으로 누르면 0 으로 초기화 or allClear할때
     }
 
     setOperation(operation){
@@ -38,7 +38,6 @@
       this.operation = operation
       this.prevValue = this.currentValue
       this.currentValue = ''    
-      console.log(this.prevValue)
       const elements = Array.from(getAll('.cell_button.operation')) 
       const element =elements.filter((element) =>
         element.innerText.includes(this.operation)
@@ -68,7 +67,6 @@
         default :
           return
       }
-      console.log(this.currentValue)
       this.currentValue = computation.toString()
       this.prevValue = ''
       this.resetOperation()
@@ -97,6 +95,12 @@
         return
       }
     }
+
+    allClear(){
+      this.resetOperation()
+      this.currentValue = ''
+      this.prevValue = ''
+    }
   }
 
   const display = get('.display')
@@ -104,6 +108,7 @@
   const operationButtons = getAll('.cell_button.operation')
   const computeButton = get('.cell_button.compute')
   const clearButton = get('.cell_button.clear')
+  const allClearButton = get('.cell_button.all_clear')
   const calculator = new Calculator(display)
   
   numberButtons.forEach(button=>{
@@ -129,4 +134,10 @@
     calculator.clear()
     calculator.updateDisplay()
   })
+
+  allClearButton.addEventListener('click',()=>{
+    calculator.allClear()
+    calculator.updateDisplay()
+  })
+
 })()
