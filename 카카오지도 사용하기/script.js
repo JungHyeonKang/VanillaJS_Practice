@@ -56,6 +56,12 @@
     shops.map(shop=>{
       const {lat , lng} = shop
       const marker =createMarker(lat ,lng)
+      const infowindow = new kakao.maps.InfoWindow({
+        content: `<div style="width:150px;text-align:center;padding:6px 2px;">
+        <a href="https://place.map.kakao.com/${shop.id}" target="_blank">${shop.name}</a>
+      </div>`,
+    });
+      infowindow.open(mapContainer, marker); 
     })
   }
   const init = () => {
