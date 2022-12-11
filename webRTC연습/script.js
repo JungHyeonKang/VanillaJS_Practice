@@ -40,6 +40,8 @@
 
     events(){
       this.btnRecord.addEventListener('click', this.toggleRecord.bind(this))
+      this.btnPlay.addEventListener('click', this.play.bind(this))
+      this.btnDownload.addEventListener('click', this.download.bind(this))
     }
     toggleRecord(){
       if(this.btnRecord.textContent === '녹화'){
@@ -78,7 +80,24 @@
       this.blobs.push(e.data)
     }
 
-    
+    play(){
+      this.recorder.src = window.createObjectURL(new Blob(this.blobs,{ type: 'video/webm' }))
+    }
+
+    download(){
+      const videoFile = new Blob(this.blobs ,{ type: 'video/webm' } )
+      const videoURL = window.URL.createObjectURL(videoFile)
+      const videoDownLoader = document.createComment('a')
+      videoDownLoader.style.display = 'none'
+      videoDownLoader.setAttribute('src', videoURL)
+      videoDownLoader.setAttribute('download','webRTC_Test')
+      this.container.appendChild(videoDownLoader)
+      videoDownLoader.click()
+      setTimeout(()=>{
+        this.container.removeChild(videoDownLoader)
+        window.URL.revokeObjectURL(videoURL)
+      },100)
+    }
   }
   
   new webRtc()
