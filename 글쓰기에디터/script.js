@@ -70,6 +70,10 @@
   ]
 
   const editbuttons = get('.editor_buttons')
+  const editorHtml = get('.editor.html')
+  const editorEdit = get('.editor.edit')
+  const editShowButton = get('.show_editor_button')
+  const htmlShowButton = get('.show_html_button')
 
   const commandObject = {}
   const doCommand = (cmdKey)=>{
@@ -78,6 +82,20 @@
     const val = cmd.val ? prompt('입력해주세요' , cmd.val) : ''
     document.execCommand(cmd.cmd , false , val || '')
   }
+
+  const showEdit = ()=>{
+    editorEdit.innerHTML = editorHtml.innerText
+    editorHtml.classList.toggle('show')
+    editorEdit.classList.toggle('show')
+  } 
+
+  const showHtml = ()=>{
+    console.log("dsa")
+    editorHtml.innerText = editorEdit.innerHTML
+    editorEdit.classList.toggle('show')
+    editorHtml.classList.toggle('show')
+  }
+
   const init = () =>{
     commands.map((command)=>{
       commandObject[command.cmd] = command
@@ -89,6 +107,9 @@
       })
       editbuttons.appendChild(element)
     })
+
+    editShowButton.addEventListener('click',showEdit)
+    htmlShowButton.addEventListener('click',showHtml)
   }
   init()
 })()
